@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
@@ -7,6 +7,13 @@
     <title>Dashboard de Política</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .card:hover {
+            transform: scale(1.05);
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -61,7 +68,35 @@
         </div>
         <div id="searchResults" class="d-flex flex-wrap justify-content-center"></div>
     </div>
-    <script src="script.js"></script>
+
+    <!-- Modal -->
+    <div class="modal fade" id="candidateModal" tabindex="-1" aria-labelledby="candidateModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="candidateModalLabel">Detalhes do Candidato</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Nome:</strong> <span id="modalNome"></span></p>
+                    <p><strong>Partido:</strong> <span id="modalPartido"></span></p>
+                    <p><strong>Município:</strong> <span id="modalMunicipio"></span></p>
+                    <p><strong>Ocupação:</strong> <span id="modalOcupacao"></span></p>
+                    <p><strong>Estado:</strong> <span id="modalEstado"></span></p>
+                    <p><strong>Região:</strong> <span id="modalRegiao"></span></p>
+                    <p><strong>Despesa Máxima:</strong> <span id="modalDespesaMaxima"></span></p>
+                    <p><strong>Coligação:</strong> <span id="modalColigacao"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script2.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

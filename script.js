@@ -21,10 +21,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     <p class="card-text">Partido: ${item.SiglaPartido}</p>
                     <p class="card-text">Município: ${item.Municipio}</p>
                     <p class="card-text">Ocupação: ${item.Ocupacao}</p>
+                    <p class="card-text">Estado: ${item.UF}</p>
+                    <p class="card-text">Região: ${item.Regiao}</p>
                 `;
+                card.addEventListener('click', () => openModal(item));
                 return card;
             }
-
             // Dashboard: Distribuição de Candidatos por Partido
             const candidatesByParty = data.reduce((acc, item) => {
                 acc[item.SiglaPartido] = (acc[item.SiglaPartido] || 0) + 1;
@@ -310,6 +312,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 topCandidates.appendChild(card);
             });
 
+
             // Nuvem de Palavras das Coligações
             const wordFrequencies = data.reduce((acc, item) => {
                 const words = item.Coligacao.split(' ');
@@ -320,26 +323,36 @@ document.addEventListener('DOMContentLoaded', function () {
             }, {});
 
             const sortedWordFrequencies = Object.entries(wordFrequencies).sort((a, b) => b[1] - a[1]);
-            const limitedWordCloudData = sortedWordFrequencies.slice(0, 100); // Limitar a 100 palavras
+            const limitedWordCloudData = sortedWordFrequencies.slice(0, 10).map(d => ({ text: d[0], size: d[1] * 10 })); // Limitar a 10 palavras
 
-            WordCloud(wordCloudContainer, {
-                list: limitedWordCloudData,
-                gridSize: Math.round(20 * wordCloudContainer.offsetWidth / 1024), // Aumentar o tamanho da grade
-                weightFactor: function (size) {
-                    return Math.pow(size, 1.5) * wordCloudContainer.offsetWidth / 1024;
-                },
-                fontFamily: 'Times, serif',
-                color: function () {
-                    return 'random-dark';
-                },
-                rotateRatio: 0.5,
-                rotationSteps: 2,
-                backgroundColor: '#ffe0e0',
-                drawOutOfBound: false,
-                shuffle: true,
-                shape: 'circle',
-                ellipticity: 0.65
-            });
+            // Usar d3-cloud para criar a nuvem de palavras
+            d3.layout.cloud()
+                .size([300, 300])
+                .words(limitedWordCloudData)
+                .padding(5)
+                .rotate(() => ~~(Math.random() * 2) * 90)
+                .font("Impact")
+                .fontSize(d => d.size)
+                .on("end", draw)
+                .start();
+
+            function draw(words) {
+                d3.select(wordCloudContainer)
+                    .append("svg")
+                    .attr("width", 300)
+                    .attr("height", 300)
+                    .append("g")
+                    .attr("transform", "translate(150,150)")
+                    .selectAll("text")
+                    .data(words)
+                    .enter().append("text")
+                    .style("font-size", d => d.size + "px")
+                    .style("font-family", "Impact")
+                    .style("fill", (d, i) => d3.schemeCategory10[i % 10])
+                    .attr("text-anchor", "middle")
+                    .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
+                    .text(d => d.text);
+            }
         })
         .catch(error => console.error('Erro ao carregar dados:', error));
 });

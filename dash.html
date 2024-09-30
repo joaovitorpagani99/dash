@@ -7,7 +7,9 @@
     <title>Dashboard de Política</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/wordcloud2.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.0.6/wordcloud2.min.js"></script>
     <style>
         .chart-container {
             position: relative;
@@ -110,14 +112,14 @@
         <div class="row mt-4">
             <div class="col-md-12 mb-4">
                 <h3 class="text-center">Nuvem de Palavras das Coligações</h3>
-                <div id="wordCloud" class="wordcloud-container"></div>
+                <div id="wordCloud" class="wordcloud-container" style="width: 300px; height: 300px;"></div>
             </div>
         </div>
     </div>
-    <script src="script.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>
