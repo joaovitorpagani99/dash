@@ -188,6 +188,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!cities.has(selectedCity)) {
             cityFilter.value = '';
+        } else {
+            cityFilter.value = selectedCity;
         }
 
         if (!parties.has(selectedParty)) {
