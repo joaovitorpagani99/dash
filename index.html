@@ -6,25 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard de Política</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .hero-section {
-            background-color: #343a40;
-            color: white;
-            padding: 50px 0;
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin-bottom: 20px;
         }
 
-        .feature {
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 20px;
+        .chart-container.pie {
+            height: 300px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .top-candidates-container {
+            display: flex;
+            margin-top: 50px;
+            margin-bottom: 80px;
         }
     </style>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Dashboard de Política</a>
+        <a class="navbar-brand" href="#">Dashboard</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -43,39 +50,58 @@
             </ul>
         </div>
     </nav>
-    <div class="hero-section text-center">
-        <div class="container">
-            <h1 class="display-4">Bem-vindo ao Dashboard de Política</h1>
-            <p class="lead">Explore dados e informações sobre candidatos e eleições.</p>
-            <a href="dash.html" class="btn btn-primary btn-lg">Acessar Dashboard</a>
-        </div>
-    </div>
     <div class="container mt-5">
-        <h2 class="text-center mb-4">Funcionalidades</h2>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="feature text-center">
-                    <h3>Dashboard Interativo</h3>
-                    <p>Visualize gráficos e estatísticas detalhadas sobre os candidatos.</p>
-                    <a href="dash.html" class="btn btn-secondary">Ver Dashboard</a>
+        <h1 class="text-center">Dashboard </h1>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h2 class="text-center">Top Candidatos por Despesa Máxima</h2>
+                <div id="topCandidates" class="top-candidates-container"></div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-6 mb-4">
+                <h3 class="text-center">Distribuição de Candidatos por Partido</h3>
+                <div class="chart-container">
+                    <canvas id="candidatesByPartyChart"></canvas>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="feature text-center">
-                    <h3>Busca Avançada</h3>
-                    <p>Encontre candidatos por nome, partido, região e mais.</p>
-                    <a href="pesquisa.html" class="btn btn-secondary">Buscar Candidatos</a>
+            <div class="col-md-6 mb-4">
+                <h3 class="text-center">Distribuição de Candidatos por Faixa Etária</h3>
+                <div class="chart-container">
+                    <canvas id="candidatesByAgeChart"></canvas>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="feature text-center">
-                    <h3>Informações Detalhadas</h3>
-                    <p>Acesse informações completas sobre cada candidato.</p>
-                    <a href="pesquisa.html" class="btn btn-secondary">Ver Informações</a>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-6 mb-4">
+                <h3 class="text-center">Distribuição de Candidatos por Gênero</h3>
+                <div class="chart-container pie">
+                    <canvas id="candidatesByGenderChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <h3 class="text-center">Distribuição de Candidatos por Grau de Instrução</h3>
+                <div class="chart-container">
+                    <canvas id="candidatesByEducationChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-6 mb-4">
+                <h3 class="text-center">Distribuição de Candidatos por Estado Civil</h3>
+                <div class="chart-container pie">
+                    <canvas id="candidatesByCivilStatusChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <h3 class="text-center">Distribuição de Candidatos por Região</h3>
+                <div class="chart-container">
+                    <canvas id="candidatesByRegionChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
+    <script src="script.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

@@ -1,157 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.getElementById('searchInput');
-    const regionFilter = document.getElementById('regionFilter');
-    const cityFilter = document.getElementById('cityFilter');
-    const stateFilter = document.getElementById('stateFilter');
-    const partyFilter = document.getElementById('partyFilter');
-    const searchResults = document.getElementById('searchResults');
-
-    fetch('candidatos-full.json')
-        .then(response => response.json())
-        .then(data => {
-            // Função para criar um card para cada item no JSON
-            function createCard(item) {
-                const card = document.createElement('div');
-                card.className = 'card m-2 p-2';
-                card.style.width = '18rem';
-                card.innerHTML = `
-                    <h5 class="card-title">${item.NomeUrna}</h5>
-                    <p class="card-text">Partido: ${item.SiglaPartido}</p>
-                    <p class="card-text">Município: ${item.Municipio}</p>
-                    <p class="card-text">Estado: ${item.UF}</p>
-                    <p class="card-text">Região: ${item.Regiao}</p>
-                `;
-                return card;
-            }
-
-            // Função para filtrar e exibir os resultados
-            function filterResults() {
-                const searchTerm = searchInput.value.toLowerCase();
-                const selectedRegion = regionFilter.value;
-                const selectedCity = cityFilter.value;
-                const selectedState = stateFilter.value;
-                const selectedParty = partyFilter.value;
-
-                const filteredData = data.filter(item => {
-                    return (
-                        (item.NomeUrna.toLowerCase().includes(searchTerm)) &&
-                        (selectedRegion === "" || item.Regiao === selectedRegion) &&
-                        (selectedCity === "" || item.Municipio === selectedCity) &&
-                        (selectedState === "" || item.UF === selectedState) &&
-                        (selectedParty === "" || item.SiglaPartido === selectedParty)
-                    );
-                });
-
-                searchResults.innerHTML = "";
-                filteredData.forEach(item => {
-                    const card = createCard(item);
-                    searchResults.appendChild(card);
-                });
-            }
-
-            // Popula os filtros com dados únicos
-            function populateFilters() {
-                const regions = [...new Set(data.map(item => item.Regiao))];
-                const cities = [...new Set(data.map(item => item.Municipio))];
-                const states = [...new Set(data.map(item => item.UF))];
-                const parties = [...new Set(data.map(item => item.SiglaPartido))];
-
-                regions.forEach(region => {
-                    const option = document.createElement('option');
-                    option.value = region;
-                    option.textContent = region;
-                    regionFilter.appendChild(option);
-                });
-
-                cities.forEach(city => {
-                    const option = document.createElement('option');
-                    option.value = city;
-                    option.textContent = city;
-                    cityFilter.appendChild(option);
-                });
-
-                states.forEach(state => {
-                    const option = document.createElement('option');
-                    option.value = state;
-                    option.textContent = state;
-                    stateFilter.appendChild(option);
-                });
-
-                parties.forEach(party => {
-                    const option = document.createElement('option');
-                    option.value = party;
-                    option.textContent = party;
-                    partyFilter.appendChild(option);
-                });
-            }
-
-            // Função para atualizar os filtros em cascata
-            function updateFilters() {
-                const selectedRegion = regionFilter.value;
-                const selectedState = stateFilter.value;
-
-                // Filtra cidades e estados com base na região selecionada
-                const filteredCities = data.filter(item => selectedRegion === "" || item.Regiao === selectedRegion).map(item => item.Municipio);
-                const filteredStates = data.filter(item => selectedRegion === "" || item.Regiao === selectedRegion).map(item => item.UF);
-
-                // Remove duplicatas
-                const uniqueCities = [...new Set(filteredCities)];
-                const uniqueStates = [...new Set(filteredStates)];
-
-                // Atualiza o filtro de cidades
-                cityFilter.innerHTML = '<option value="">Todas as Cidades</option>';
-                uniqueCities.forEach(city => {
-                    const option = document.createElement('option');
-                    option.value = city;
-                    option.textContent = city;
-                    cityFilter.appendChild(option);
-                });
-
-                // Atualiza o filtro de estados
-                stateFilter.innerHTML = '<option value="">Todos os Estados</option>';
-                uniqueStates.forEach(state => {
-                    const option = document.createElement('option');
-                    option.value = state;
-                    option.textContent = state;
-                    stateFilter.appendChild(option);
-                });
-
-                // Filtra cidades com base no estado selecionado
-                if (selectedState !== "") {
-                    const filteredCitiesByState = data.filter(item => item.UF === selectedState).map(item => item.Municipio);
-                    const uniqueCitiesByState = [...new Set(filteredCitiesByState)];
-
-                    cityFilter.innerHTML = '<option value="">Todas as Cidades</option>';
-                    uniqueCitiesByState.forEach(city => {
-                        const option = document.createElement('option');
-                        option.value = city;
-                        option.textContent = city;
-                        cityFilter.appendChild(option);
-                    });
-                }
-            }
-
-            // Event listeners para os filtros e campo de busca
-            searchInput.addEventListener('input', filterResults);
-            regionFilter.addEventListener('change', () => {
-                updateFilters();
-                filterResults();
-            });
-            cityFilter.addEventListener('change', filterResults);
-            stateFilter.addEventListener('change', () => {
-                updateFilters();
-                filterResults();
-            });
-            partyFilter.addEventListener('change', filterResults);
-
-            // Popula os filtros e exibe todos os resultados inicialmente
-            populateFilters();
-            filterResults();
-        })
-        .catch(error => console.error('Erro ao carregar dados:', error));
-});
-
-document.addEventListener('DOMContentLoaded', function () {
     const candidatesByPartyChartCtx = document.getElementById('candidatesByPartyChart').getContext('2d');
     const candidatesByAgeChartCtx = document.getElementById('candidatesByAgeChart').getContext('2d');
     const candidatesByGenderChartCtx = document.getElementById('candidatesByGenderChart').getContext('2d');
@@ -159,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const candidatesByCivilStatusChartCtx = document.getElementById('candidatesByCivilStatusChart').getContext('2d');
     const candidatesByRegionChartCtx = document.getElementById('candidatesByRegionChart').getContext('2d');
     const topCandidates = document.getElementById('topCandidates');
+    const wordCloudContainer = document.getElementById('wordCloud');
 
     fetch('candidatos-full.json')
         .then(response => response.json())
@@ -308,16 +156,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 boxWidth: 20,
                                 padding: 15
                             }
-                        },
-                        datalabels: {
-                            color: '#36A2EB',
-                            formatter: (value, ctx) => {
-                                let sum = ctx.chart.getDatasetMeta(0).data.map(data => data._model.data).reduce((a, b) => a + b, 0);
-                                let percentage = ((value / sum) * 100).toFixed(2) + '%';
-                                return percentage;
-                            },
-                            anchor: 'end',
-                            align: 'end'
                         }
                     }
                 }
@@ -407,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Distribuição de Candidatos por Estado Civil',
+                            text: 'Distribuição de Candidatos por Estado Civil'
                         },
                         legend: {
                             display: true,
@@ -416,16 +254,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 boxWidth: 20,
                                 padding: 15
                             }
-                        },
-                        datalabels: {
-                            color: '#36A2EB',
-                            formatter: (value, ctx) => {
-                                let sum = ctx.chart.getDatasetMeta(0).data.map(data => data._model.data).reduce((a, b) => a + b, 0);
-                                let percentage = ((value / sum) * 100).toFixed(2) + '%';
-                                return percentage;
-                            },
-                            anchor: 'end',
-                            align: 'end'
                         }
                     }
                 }
@@ -468,19 +296,49 @@ document.addEventListener('DOMContentLoaded', function () {
                             position: 'top',
                             labels: {
                                 boxWidth: 20,
-                                padding: 20,
-
+                                padding: 15
                             }
                         }
                     }
                 }
             });
 
-            // Dashboard: Top N Candidatos por Despesa Máxima
-            const topNCandidates = data.sort((a, b) => parseFloat(b.DespesaMaxima.replace(',', '.')) - parseFloat(a.DespesaMaxima.replace(',', '.'))).slice(0, 5);
-            topNCandidates.forEach(item => {
+            // Top Candidatos por Despesa Máxima
+            const topCandidatesData = data.sort((a, b) => b.DespesaMaxima - a.DespesaMaxima).slice(0, 5);
+            topCandidatesData.forEach(item => {
                 const card = createCard(item);
                 topCandidates.appendChild(card);
+            });
+
+            // Nuvem de Palavras das Coligações
+            const wordFrequencies = data.reduce((acc, item) => {
+                const words = item.Coligacao.split(' ');
+                words.forEach(word => {
+                    acc[word] = (acc[word] || 0) + 1;
+                });
+                return acc;
+            }, {});
+
+            const sortedWordFrequencies = Object.entries(wordFrequencies).sort((a, b) => b[1] - a[1]);
+            const limitedWordCloudData = sortedWordFrequencies.slice(0, 100); // Limitar a 100 palavras
+
+            WordCloud(wordCloudContainer, {
+                list: limitedWordCloudData,
+                gridSize: Math.round(20 * wordCloudContainer.offsetWidth / 1024), // Aumentar o tamanho da grade
+                weightFactor: function (size) {
+                    return Math.pow(size, 1.5) * wordCloudContainer.offsetWidth / 1024;
+                },
+                fontFamily: 'Times, serif',
+                color: function () {
+                    return 'random-dark';
+                },
+                rotateRatio: 0.5,
+                rotationSteps: 2,
+                backgroundColor: '#ffe0e0',
+                drawOutOfBound: false,
+                shuffle: true,
+                shape: 'circle',
+                ellipticity: 0.65
             });
         })
         .catch(error => console.error('Erro ao carregar dados:', error));
